@@ -1,6 +1,7 @@
 /* eslint-disable import-helpers/order-imports */
 import { Router } from "express";
 import { CategoriesRepository } from "../repositories/CategoriesRepository";
+import { CreateCategoryService } from "../services/CreateCategoryService";
 
 const categoriesRoutes = Router();
 
@@ -8,15 +9,14 @@ const categoriesRepository = new CategoriesRepository();
 
 categoriesRoutes.post("/", (request, response) => {
   const { name, description } = request.body;
+  // A rota recebe o nome e a descrição do novo tipo de categoria
+  const createCategoryService = new CreateCategoryService(categoriesRepository);
 
-  const categoryAlreadyExists = categoriesRepository.findByName(name);
+  // A rota chama o serviço de criação de categoria
+  // caso o nome da categoria já exista, o serviço lança um erro
+  createCategoryService.execute({ name, description });
 
-  if (categoryAlreadyExists) {
-    return response.status(400).json({ error: "Category already exists" });
-  }
-
-  categoriesRepository.create({ name, description });
-
+  // A rota retorna o status 201 (created)
   return response.status(201).send();
 });
 
