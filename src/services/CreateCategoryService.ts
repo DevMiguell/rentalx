@@ -1,4 +1,4 @@
-import { CategoriesRepository } from "../repositories/CategoriesRepository";
+import { ICategoriesRepository } from "../repositories/ICategoriesRepository";
 
 interface IRequest {
   name: string;
@@ -7,9 +7,9 @@ interface IRequest {
 
 class CreateCategoryService {
   // o constructor é um método que é executado quando o objeto é criado
-  constructor(private categoriesRepository: CategoriesRepository) {}
+  constructor(private categoriesRepository: ICategoriesRepository) {}
 
-  // o execute é um método que é executado quando o objeto é chamado
+  // o execute é um método que é executado quando o objeto é chamado, e adiciona os dados na tabela caso não existam
   execute({ name, description }: IRequest): void {
     const categoryAlreadyExists = this.categoriesRepository.findByName(name);
 
